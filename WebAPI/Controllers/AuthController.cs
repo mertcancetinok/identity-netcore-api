@@ -17,7 +17,6 @@ namespace WebAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-        private readonly IConfiguration _configuration;
         public AuthController(IAuthService authService)
         {
             _authService = authService;
@@ -30,6 +29,22 @@ namespace WebAPI.Controllers
             var result = await _authService.Register(model);
             return result.Success ? Ok(result) : BadRequest(result);
             
+        }
+        [HttpPost]
+        [Route("RegisterAdmin")]
+        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterDto model)
+        {
+            var result = await _authService.RegisterAdmin(model);
+            return result.Success ? Ok(result) : BadRequest(result);
+
+        }
+        [HttpPost]
+        [Route("Login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto model)
+        {
+            var result = await _authService.Login(model);
+            return result.Success ? Ok(result) : Unauthorized();
+
         }
     }
 }

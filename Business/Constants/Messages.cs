@@ -10,5 +10,9 @@ namespace Business.Constants
     {
         public static string UserExists = "Böyle bir kullanıcı var.";
         public static string UserSuccess = "Başarıyla üye olundu.";
+
+        public static string LoginNotSuccess = "Giriş başarılı değil.";
+
+        public static string LoginSuccess = "Giriş başarılı";
     }
 }
