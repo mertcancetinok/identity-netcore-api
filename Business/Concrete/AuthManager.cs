@@ -56,25 +56,25 @@ namespace Business.Concrete
         public async Task<IDataResult<TokenModel>> Login(LoginDto loginDto)
         {
             var user = await userManager.FindByNameAsync(loginDto.Username);
-            if(user!=null && await userManager.CheckPasswordAsync(user, loginDto.Password))
-            {
-                var userRoles = await userManager.GetRolesAsync(user);
-                var authClaims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name,user.UserName),
-                    new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
-                };
-                foreach (var userRole in userRoles)
-                {
-                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-                }
-                var tokenModel  = new TokenModel();
-                tokenModel.CreateToken(authClaims, Configuration);
-                tokenModel.Username = loginDto.Username;
-                return new SuccessDataResult<TokenModel>(tokenModel,Messages.LoginSuccess);
+            if (user == null)
+                return new ErrorDataResult<TokenModel>(Messages.UserNotFound);
+            if (!await userManager.CheckPasswordAsync(user, loginDto.Password))
+                return new ErrorDataResult<TokenModel>(Messages.PasswordIncorrect);
 
+            var userRoles = await userManager.GetRolesAsync(user);
+            var authClaims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name,user.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
+            };
+            foreach (var userRole in userRoles)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Role, userRole));
             }
-            return new ErrorDataResult<TokenModel>(Messages.LoginNotSuccess);
+            var tokenModel  = new TokenModel();
+            tokenModel.CreateToken(authClaims, Configuration);
+            tokenModel.Username = loginDto.Username;
+            return new SuccessDataResult<TokenModel>(tokenModel,Messages.LoginSuccess);
         }
 
         public async Task<IResult> RegisterAdmin(RegisterDto registerDto)

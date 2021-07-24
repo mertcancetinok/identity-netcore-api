@@ -43,7 +43,7 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> Login([FromBody] LoginDto model)
         {
             var result = await _authService.Login(model);
-            return result.Success ? Ok(result) : Unauthorized();
+            return result.Success ? Ok(result) : Unauthorized(result);
 
         }
     }

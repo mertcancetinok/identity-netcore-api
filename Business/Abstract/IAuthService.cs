@@ -14,5 +14,7 @@ namespace Business.Abstract
         Task<IResult> Register(RegisterDto registerDto);
         Task<IResult> RegisterAdmin(RegisterDto registerDto);
         Task<IDataResult<TokenModel>> Login(LoginDto loginDto);
+
+
     }
 }
